@@ -103,8 +103,8 @@ def callback_handler(call):
                     try:
                         with open(VIDEO1_PATH, 'rb') as f:
                             bot.send_video(call.message.chat.id, f, caption="🎬 Видео!")
-                     except Exception as e:
-                        bot.send_message(call.message.chat.id, f"❌ Ошибка видео: {e}")
+                except Exception as e:
+                    bot.send_message(call.message.chat.id, f"❌ Ошибка видео: {e}")
             else:
                 bot.send_message(call.message.chat.id, f"❌ Нет файла: {VIDEO1_PATH}")
     

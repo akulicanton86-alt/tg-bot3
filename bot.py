@@ -94,7 +94,7 @@ def callback_handler(call):
             try:
                 with open(PHOTO1_PATH, 'rb') as f:
                     bot.send_photo(call.message.chat.id, f, caption="💃 Первое фото!")
-                    except Exception as e:
+            except Exception as e:
                 bot.send_message(call.message.chat.id, f"❌ Ошибка фото1: {e}")
         else:
             bot.send_message(call.message.chat.id, f"❌ Нет файла: {PHOTO1_PATH}")

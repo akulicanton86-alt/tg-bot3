@@ -35,16 +35,16 @@ def ping_self():
 
 # --- НАСТРОЙКИ ФАЙЛОВ ---
 # Фото (3 штуки)
-PHOTO1_PATH = os.path.join(os.path.dirname(file), "krasotka1.jpg")
-PHOTO2_PATH = os.path.join(os.path.dirname(file), "krasotka2.jpg")
-PHOTO3_PATH = os.path.join(os.path.dirname(file), "krasotka3.jpg")
+PHOTO1_PATH = os.path.join(os.path.dirname(__file__), "krasotka1.jpg")
+PHOTO2_PATH = os.path.join(os.path.dirname(__file__), "krasotka2.jpg")
+PHOTO3_PATH = os.path.join(os.path.dirname(__file__), "krasotka3.jpg")
 
 # Видео (1 штука)
-VIDEO1_PATH = os.path.join(os.path.dirname(file), "video1.mp4")
+VIDEO1_PATH = os.path.join(os.path.dirname(__file__), "video1.mp4")
 
 # Музыка/Аудио (2 штуки)
-AUDIO1_PATH = os.path.join(os.path.dirname(file), "music1.m4a")
-AUDIO2_PATH = os.path.join(os.path.dirname(file), "music2.m4a")
+AUDIO1_PATH = os.path.join(os.path.dirname(__file__), "music1.m4a")
+AUDIO2_PATH = os.path.join(os.path.dirname(__file__), "music2.m4a")
 
 def clean_text(text: str) -> str:
     """Удаляет знаки препинания и приводит к нижнему регистру"""

@@ -100,13 +100,13 @@ def callback_handler(call):
             else:
                 bot.send_message(call.message.chat.id, f"❌ Нет файла: {path}")
                 if os.path.exists(VIDEO1_PATH):
-            try:
-                with open(VIDEO1_PATH, 'rb') as f:
-                    bot.send_video(call.message.chat.id, f, caption="🎬 Видео!")
-            except Exception as e:
-                bot.send_message(call.message.chat.id, f"❌ Ошибка видео: {e}")
-        else:
-            bot.send_message(call.message.chat.id, f"❌ Нет файла: {VIDEO1_PATH}")
+                    try:
+                        with open(VIDEO1_PATH, 'rb') as f:
+                            bot.send_video(call.message.chat.id, f, caption="🎬 Видео!")
+                     except Exception as e:
+                        bot.send_message(call.message.chat.id, f"❌ Ошибка видео: {e}")
+            else:
+                bot.send_message(call.message.chat.id, f"❌ Нет файла: {VIDEO1_PATH}")
     
     elif call.data == "music":
         if os.path.exists(AUDIO1_PATH):

@@ -1,5 +1,8 @@
 import telebot
 import re
+import threading
+import requests
+import time
 import os
 from telebot import types
 
@@ -39,6 +42,20 @@ def main_menu_keyboard():
     btn6 = types.InlineKeyboardButton("🎵 Любимая музыка", callback_data="music")
     markup.add(btn1, btn2, btn3, btn4, btn5, btn6)
     return markup
+
+# Функция для пинга самого себя (чтобы не засыпал)
+def keep_alive():
+    url = "https://ladnobot.onrender.com"  # 👈 ЗАМЕНИТЕ на ваш URL из Render
+    while True:
+        try:
+            requests.get(url, timeout=10)
+            print("✅ Пинг отправлен")
+        except Exception as e:
+            print(f"❌ Ошибка пинга: {e}")
+        time.sleep(60)  # Пинг каждые 60 секунд
+
+# Запускаем пинг в отдельном потоке
+threading.Thread(target=keep_alive, daemon=True).start()
 
 @bot.message_handler(commands=["start"])
 def start_handler(message):

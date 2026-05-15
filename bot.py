@@ -195,7 +195,7 @@ def handle_message(message):
         )
 
 # --- ЗАПУСК БОТА С ПИНГОМ ---
-if name == "main":
+if __name__ == "main":
     # Запускаем поток с пингом (если URL настроен)
     if RENDER_URL and RENDER_URL != "https://ваш-бот-на-рендере.render.com":
         ping_thread = threading.Thread(target=ping_self, daemon=True)

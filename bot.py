@@ -6,53 +6,59 @@ import time
 import os
 from telebot import types
 
-bot = telebot.TeleBot(token='8792774006:AAFEFoiURdV6STK52VCb_KopSFmMrPPIrqA')
+# Добавьте это в САМОМ НАЧАЛЕ для отладки
+print("🚀 Бот запускается...")
+print(f"📁 Текущая директория: {os.getcwd()}")
+print(f"📂 Файлы в директории: {os.listdir('.')}")
 
-# --- НАСТРОЙКИ ССЫЛКИ НА КАНАЛ ---
+try:
+    bot = telebot.TeleBot(token='8792774006:AAFEFoiURdV6STK52VCb_KopSFmMrPPIrqA')
+    print("✅ Токен загружен")
+except Exception as e:
+    print(f"❌ Ошибка токена: {e}")
+    exit(1)
+
+# --- НАСТРОЙКИ ---
 BEST_CHANNEL_LINK = "https://t.me/+khaTEBu3P-pjNzB1"
 BEST_CHANNEL_NAME = "@KLICHAAAAA"
 
-# --- НАСТРОЙКИ ПИНГА ---
-PING_INTERVAL = 40  # секунд
-# URL вашего бота на Render (ЗАМЕНИТЕ НА СВОЙ!)
-RENDER_URL = "https://ваш-бот-на-рендере.render.com"  # <--- ВАЖНО: вставьте свой URL
+# --- НАСТРОЙКИ ФАЙЛОВ ---
+# ВАЖНО: Проверяем существование файлов
+print("\n📁 Проверка файлов:")
 
-def ping_self():
-    """Функция для пинга самого себя через определенные интервалы"""
+PHOTO1_PATH = "krasotka1.jpg"  # Упрощаем путь
+PHOTO2_PATH = "krasotka2.jpg"
+PHOTO3_PATH = "krasotka3.jpg"
+VIDEO1_PATH = "video1.mp4"
+AUDIO1_PATH = "music1.m4a"
+AUDIO2_PATH = "music2.m4a"
+
+# Проверяем каждый файл
+files_to_check = [PHOTO1_PATH, PHOTO2_PATH, PHOTO3_PATH, VIDEO1_PATH, AUDIO1_PATH, AUDIO2_PATH]
+for file_path in files_to_check:
+    if os.path.exists(file_path):
+        print(f"✅ Найден: {file_path}")
+    else:
+        print(f"❌ НЕ НАЙДЕН: {file_path}")
+
+# --- ФУНКЦИЯ ПИНГА (упрощенная) ---
+def keep_alive():
+    """Простой пинг чтобы бот не засыпал"""
     while True:
         try:
-            if RENDER_URL and RENDER_URL != "https://ваш-бот-на-рендере.render.com":
-                response = requests.get(RENDER_URL, timeout=10)
-                print(f"✅ Пинг успешен: {response.status_code} - {time.strftime('%H:%M:%S')}")
-            else:
-                print(f"⚠️ Пропуск пинга: URL не настроен ({time.strftime('%H:%M:%S')})")
-                # Альтернатива: пинг через Telegram API (не нагружает)
-                # bot.get_me()  # легкий запрос к Telegram API
+            # Пинг через Telegram API (не требует URL)
+            bot.get_me()
+            print(f"💓 Пинг в {time.strftime('%H:%M:%S')}")
         except Exception as e:
-            print(f"❌ Ошибка пинга: {e} - {time.strftime('%H:%M:%S')}")
-        
-        time.sleep(PING_INTERVAL)
+            print(f"⚠️ Ошибка пинга: {e}")
+        time.sleep(40)
 
-# --- НАСТРОЙКИ ФАЙЛОВ ---
-# Фото (3 штуки)
-PHOTO1_PATH = os.path.join(os.path.dirname(__file__), "krasotka1.jpg")
-PHOTO2_PATH = os.path.join(os.path.dirname(__file__), "krasotka2.jpg")
-PHOTO3_PATH = os.path.join(os.path.dirname(__file__), "krasotka3.jpg")
-
-# Видео (1 штука)
-VIDEO1_PATH = os.path.join(os.path.dirname(__file__), "video1.mp4")
-
-# Музыка/Аудио (2 штуки)
-AUDIO1_PATH = os.path.join(os.path.dirname(__file__), "music1.m4a")
-AUDIO2_PATH = os.path.join(os.path.dirname(__file__), "music2.m4a")
-
+# --- ОСТАЛЬНОЙ ВАШ КОД (clean_text, main_menu_keyboard и т.д.) ---
 def clean_text(text: str) -> str:
-    """Удаляет знаки препинания и приводит к нижнему регистру"""
     text = text.lower().strip()
     text = re.sub(r'[^\w\s]', '', text)
     return text
 
-# --- ГЛАВНОЕ МЕНЮ С КНОПКАМИ ---
 def main_menu_keyboard():
     markup = types.InlineKeyboardMarkup(row_width=2)
     btn1 = types.InlineKeyboardButton("👤 Кто такая Ксюня?", callback_data="ksyuna")
@@ -66,59 +72,34 @@ def main_menu_keyboard():
 
 @bot.message_handler(commands=["start"])
 def start_handler(message):
-    bot.send_message(
-        message.chat.id, 
-        "👋 Привет! Я бот с ответами на разные запросы.\n\nНажми на кнопку ниже, чтобы выбрать действие:",
-        reply_markup=main_menu_keyboard()
-    )
+    bot.send_message(message.chat.id, "👋 Привет! Я бот с ответами на разные запросы.\n\nНажми на кнопку ниже, чтобы выбрать действие:", reply_markup=main_menu_keyboard())
 
-# --- ОБРАБОТЧИК НАЖАТИЙ НА КНОПКИ ---
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
     if call.data == "ksyuna":
         bot.send_message(call.message.chat.id, "Это повелительница галактик которая высмаркивает маслины и черные арбузы с икрой")
-    
     elif call.data == "mahnatka":
         bot.send_message(call.message.chat.id, "да")
-    
     elif call.data == "ability":
         bot.send_message(call.message.chat.id, "вешалка")
-    
     elif call.data == "best_channel":
         bot.send_message(call.message.chat.id, f"🔥 Лучший Telegram-канал: {BEST_CHANNEL_NAME}\n👉 {BEST_CHANNEL_LINK}")
-    
     elif call.data == "krasotka":
-        # Отправляем 3 фото + 1 видео
-        # Фото 1
-        if os.path.exists(PHOTO1_PATH):
-            try:
-                with open(PHOTO1_PATH, 'rb') as f:
-                    bot.send_photo(call.message.chat.id, f, caption="💃 Первое фото!")
-            except Exception as e:
-                bot.send_message(call.message.chat.id, f"❌ Ошибка фото1: {e}")
-        else:
-            bot.send_message(call.message.chat.id, f"❌ Нет файла: {PHOTO1_PATH}")
-        
-        # Фото 2
-        if os.path.exists(PHOTO2_PATH):
-            try:
-                with open(PHOTO2_PATH, 'rb') as f:
-                    bot.send_photo(call.message.chat.id, f, caption="🌸 Второе фото!")
-            except Exception as e:
-                bot.send_message(call.message.chat.id, f"❌ Ошибка фото2: {e}")
-        else:
-            bot.send_message(call.message.chat.id, f"❌ Нет файла: {PHOTO2_PATH}")
-        
-        # Фото 3
-        if os.path.exists(PHOTO3_PATH):
-            try:
-                with open(PHOTO3_PATH, 'rb') as f:
-                    bot.send_photo(call.message.chat.id, f, caption="✨ Третье фото!")
-            except Exception as e:
-                bot.send_message(call.message.chat.id, f"❌ Ошибка фото3: {e}")
-        
-        # Видео
-        if os.path.exists(VIDEO1_PATH):
+        # Отправляем файлы с проверкой
+        for i, (path, caption) in enumerate([
+            (PHOTO1_PATH, "💃 Первое фото!"),
+            (PHOTO2_PATH, "🌸 Второе фото!"),
+            (PHOTO3_PATH, "✨ Третье фото!"),
+        ], 1):
+            if os.path.exists(path):
+                try:
+                    with open(path, 'rb') as f:
+                        bot.send_photo(call.message.chat.id, f, caption=caption)
+                except Exception as e:
+                    bot.send_message(call.message.chat.id, f"❌ Ошибка фото{i}: {e}")
+            else:
+                bot.send_message(call.message.chat.id, f"❌ Нет файла: {path}")
+                if os.path.exists(VIDEO1_PATH):
             try:
                 with open(VIDEO1_PATH, 'rb') as f:
                     bot.send_video(call.message.chat.id, f, caption="🎬 Видео!")
@@ -128,7 +109,6 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, f"❌ Нет файла: {VIDEO1_PATH}")
     
     elif call.data == "music":
-        # Отправляем 2 аудио
         if os.path.exists(AUDIO1_PATH):
             try:
                 with open(AUDIO1_PATH, 'rb') as f:
@@ -147,18 +127,12 @@ def callback_handler(call):
         else:
             bot.send_message(call.message.chat.id, f"❌ Нет файла: {AUDIO2_PATH}")
     
-    # Убираем "часики" на кнопке после нажатия
     bot.answer_callback_query(call.id)
 
-# --- ОБРАБОТЧИК ТЕКСТОВЫХ СООБЩЕНИЙ (для обратной совместимости) ---
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
-    raw_text = message.text
-    text = clean_text(raw_text)
+    text = clean_text(message.text)
     
-    print(f"Получено: {raw_text} -> Очищено: {text}")
-    
-    # Если пользователь пишет текст, тоже отвечаем (дублируем кнопки)
     if text in ["кто такая ксюня", "кто такая ксюна"]:
         bot.send_message(message.chat.id, "Это повелительница галактик которая высмаркивает маслины и черные арбузы с икрой")
     elif text in ["видел ли он махнатку она услышала", "видел ли он махнатку"]:
@@ -168,16 +142,11 @@ def handle_message(message):
     elif text in ["лучший тгк", "лучший телеграм канал", "топ тгк", "лучший тг"]:
         bot.send_message(message.chat.id, f"🔥 Лучший Telegram-канал: {BEST_CHANNEL_NAME}\n👉 {BEST_CHANNEL_LINK}")
     elif text in ["красотка", "красотка фото", "скинь красотку"]:
-        # Тот же код для красотки что и выше (можно вынести в отдельную функцию)
-        if os.path.exists(PHOTO1_PATH):
-            with open(PHOTO1_PATH, 'rb') as f:
-                bot.send_photo(message.chat.id, f, caption="💃 Первое фото!")
-        if os.path.exists(PHOTO2_PATH):
-            with open(PHOTO2_PATH, 'rb') as f:
-                bot.send_photo(message.chat.id, f, caption="🌸 Второе фото!")
-        if os.path.exists(PHOTO3_PATH):
-            with open(PHOTO3_PATH, 'rb') as f:
-                bot.send_photo(message.chat.id, f, caption="✨ Третье фото!")
+        # Аналогично отправке из callback
+        for path, caption in [(PHOTO1_PATH, "💃 Первое фото!"), (PHOTO2_PATH, "🌸 Второе фото!"), (PHOTO3_PATH, "✨ Третье фото!")]:
+            if os.path.exists(path):
+                with open(path, 'rb') as f:
+                    bot.send_photo(message.chat.id, f, caption=caption)
         if os.path.exists(VIDEO1_PATH):
             with open(VIDEO1_PATH, 'rb') as f:
                 bot.send_video(message.chat.id, f, caption="🎬 Видео!")
@@ -189,21 +158,21 @@ def handle_message(message):
             with open(AUDIO2_PATH, 'rb') as f:
                 bot.send_audio(message.chat.id, f, caption="🎶 Вторая любимая песня!")
     else:
-        bot.send_message(message.chat.id, 
-            "❓ Не понял запрос.\n\nНажми /start, чтобы открыть меню с кнопками!",
-            reply_markup=main_menu_keyboard()
-        )
+        bot.send_message(message.chat.id, "❓ Не понял запрос.\n\nНажми /start, чтобы открыть меню с кнопками!", reply_markup=main_menu_keyboard())
 
-# --- ЗАПУСК БОТА С ПИНГОМ ---
-if __name__ == "main":
-    # Запускаем поток с пингом (если URL настроен)
-    if RENDER_URL and RENDER_URL != "https://ваш-бот-на-рендере.render.com":
-        ping_thread = threading.Thread(target=ping_self, daemon=True)
-        ping_thread.start()
-        print(f"🔄 Пинг-сервис запущен (каждые {PING_INTERVAL} сек)")
-    else:
-        print("⚠️ Внимание: URL для пинга не настроен! Бот может остановиться на Render")
-        print("📝 Укажите RENDER_URL в коде")
+# --- ЗАПУСК ---
+if name == "main":
+    print("\n🎯 Запускаем бота...")
     
-    print("✅ Бот запущен с кнопками!")
-    bot.polling(none_stop=True)
+    # Запускаем пинг в отдельном потоке
+    ping_thread = threading.Thread(target=keep_alive, daemon=True)
+    ping_thread.start()
+    print("🔄 Пинг-сервис запущен")
+    
+    print("✅ Бот готов к работе!")
+    
+    try:
+        bot.polling(none_stop=True)
+    except Exception as e:
+        print(f"❌ Критическая ошибка: {e}")
+        exit(1)

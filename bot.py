@@ -175,7 +175,7 @@ def handle_message(message):
         if os.path.exists(PHOTO2_PATH):
             with open(PHOTO2_PATH, 'rb') as f:
                 bot.send_photo(message.chat.id, f, caption="🌸 Второе фото!")
-                if os.path.exists(PHOTO3_PATH):
+        if os.path.exists(PHOTO3_PATH):
             with open(PHOTO3_PATH, 'rb') as f:
                 bot.send_photo(message.chat.id, f, caption="✨ Третье фото!")
         if os.path.exists(VIDEO1_PATH):
